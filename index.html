@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API XCVI - REST API Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --primary-light: rgba(0, 102, 255, 0.1);
+            --black: #0a0a0f;
+            --dark: #121218;
+            --gray: #1a1a22;
+            --light-gray: #2a2a33;
+            --text: #ffffff;
+            --text-light: #a0a0b0;
+            --success: #00cc66;
+            --warning: #ff9900;
+            --danger: #ff3333;
+            --card-bg: #151520;
+            --border: #252536;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--black) 100%);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--primary), #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-left: 2.5rem;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 160px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 1.25rem 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .mini-stat {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mini-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .mini-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .mini-channel {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .mini-channel:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .api-section {
+            margin: 2rem 0;
+        }
+
+        .category {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .category:hover {
+            border-color: var(--primary);
+        }
+
+        .category-header {
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+        }
+
+        .category-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .category-content {
+            display: none;
+        }
+
+        .category.active .category-content {
+            display: block;
+        }
+
+        .api-item {
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .api-item:last-child {
+            border-bottom: none;
+        }
+
+        .api-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .api-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-item-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .api-item-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .api-item-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 204, 102, 0.3);
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .api-expanded-content {
+            display: none;
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid var(--border);
+            animation: slideDown 0.3s ease;
+        }
+
+        .api-expanded-content.active {
+            display: block;
+        }
+
+        .endpoint-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .method-badge {
+            padding: 0.35rem 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            background: rgba(0, 102, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+        }
+
+        .url-box {
+            flex: 1;
+            min-width: 200px;
+            background: var(--black);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--text);
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .params-section {
+            margin: 1.5rem 0;
+        }
+
+        .param-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .param-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+        }
+
+        .param-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--black);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            transition: border 0.2s;
+        }
+
+        .param-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .example-section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(0, 102, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .example-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .example-code {
+            background: var(--black);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #00ccff;
+            word-break: break-all;
+        }
+
+        .execute-btn {
+            background: linear-gradient(135deg, var(--success), #00b359);
+            color: white;
+            border: none;
+            padding: 0.85rem 1.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .execute-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 204, 102, 0.3);
+        }
+
+        .execute-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            margin-top: 1.5rem;
+            background: var(--black);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        .result-header {
+            background: var(--gray);
+            padding: 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-content {
+            padding: 1.25rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-view {
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #e0e0e0;
+        }
+
+        .bug-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bug-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            padding: 1.75rem;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 450px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--black);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            margin: 0.5rem 0 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .modal-submit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-close {
+            background: var(--light-gray);
+            color: var(--text);
+        }
+
+        .modal-close:hover {
+            background: var(--gray);
+        }
+
+        .footer {
+            background: var(--dark);
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 102, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.75rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-image {
+                height: 140px;
+            }
+            
+            .mini-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .url-box {
+                min-width: 100%;
+            }
+            
+            .endpoint-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-bolt logo-icon"></i>
+                <h1>API XCVI</h1>
+            </div>
+            <div class="tagline">Professional REST API Collection</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-image">
+            <img src="https://files.catbox.moe/rlpsn1.jpg" alt="API XCVI Banner" id="bannerImage">
+        </div>
+
+        <div class="mini-stats">
+            <div class="mini-stat">
+                <div class="mini-label">Active Endpoints</div>
+                <div class="mini-value" id="activeCount">0</div>
+            </div>
+            <div class="mini-stat">
+                <div class="mini-label">Last Updated</div>
+                <div class="mini-value" id="lastUpdated">-</div>
+            </div>
+            <div class="mini-stat">
+                <div class="mini-label">Server Status</div>
+                <div class="mini-value" id="serverStatus" style="color: var(--success);">Online</div>
+            </div>
+            <div class="mini-stat">
+                <div class="mini-label">WhatsApp Channel</div>
+                <a href="https://whatsapp.com/channel/0029VbCA8f77j6gFUcCZTu0y" target="_blank" class="mini-channel">
+                    <i class="fab fa-whatsapp"></i> Join Channel
+                </a>
+            </div>
+        </div>
+
+        <div class="api-section" id="apiCategories">
+            <!-- API categories will be loaded dynamically -->
+        </div>
+    </div>
+
+    <div class="bug-modal" id="bugModal">
+        <div class="modal-content">
+            <div class="modal-title">Report Bug</div>
+            <input type="text" id="bugName" class="modal-input" placeholder="Your Name (Optional)">
+            <textarea id="bugMessage" class="modal-input" placeholder="Describe the bug or issue in detail..." rows="4"></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-close" onclick="closeBugModal()">Cancel</button>
+                <button class="modal-btn modal-submit" onclick="submitBugReport()">
+                    <i class="fas fa-paper-plane"></i> Submit Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#" onclick="showBugModal()">Report Bug</a>
+            </div>
+            <div class="copyright">
+                © 2026 Powered by Wanz Official
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apiData = null;
+        let expandedApi = null;
+
+        async function loadAPIData() {
+            try {
+                const response = await fetch('listapi.json');
+                apiData = await response.json();
+                
+                document.getElementById('activeCount').textContent = apiData.stats.active_endpoints;
+                document.getElementById('lastUpdated').textContent = apiData.stats.last_update;
+                
+                renderCategories();
+            } catch (error) {
+                console.error('Failed to load API data:', error);
+                showNotification('Failed to load API data. Please refresh.', 'error');
+            }
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('apiCategories');
+            if (!apiData) return;
+            
+            container.innerHTML = '';
+            
+            apiData.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category';
+                categoryElement.innerHTML = `
+                    <div class="category-header" onclick="toggleCategory('${category.id}')">
+                        <span><i class="fas ${category.icon}"></i> ${category.name} <span style="color: var(--text-light); font-size: 0.8rem;">(${category.apis.length})</span></span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="category-content" id="content-${category.id}">
+                        ${category.apis.map(api => `
+                            <div class="api-item" id="api-item-${api.file}">
+                                <div class="api-item-header">
+                                    <div>
+                                        <div class="api-item-name">${api.name}</div>
+                                        <div class="api-item-desc">${api.description}</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <span class="api-item-status ${api.active ? 'status-active' : ''}">
+                                            ${api.active ? 'Active' : 'Inactive'}
+                                        </span>
+                                        <button class="toggle-btn" onclick="toggleApiDetails('${category.id}', '${api.file}', event)">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="api-expanded-content" id="expanded-${api.file}">
+                                    <!-- Expanded content will be inserted here -->
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(categoryElement);
+            });
+        }
+
+        function toggleCategory(categoryId) {
+            const category = document.querySelector(`[id="content-${categoryId}"]`).parentElement;
+            category.classList.toggle('active');
+        }
+
+        function toggleApiDetails(categoryId, apiFile, event) {
+            event.stopPropagation();
+            
+            const category = apiData.categories.find(c => c.id === categoryId);
+            const api = category.apis.find(a => a.file === apiFile);
+            const expandedContent = document.getElementById(`expanded-${apiFile}`);
+            const toggleBtn = event.currentTarget;
+            
+            if (expandedApi === apiFile) {
+                expandedContent.classList.remove('active');
+                expandedContent.innerHTML = '';
+                expandedApi = null;
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            } else {
+                if (expandedApi) {
+                    document.getElementById(`expanded-${expandedApi}`).classList.remove('active');
+                    document.getElementById(`expanded-${expandedApi}`).innerHTML = '';
+                    const prevBtn = document.querySelector(`#api-item-${expandedApi} .toggle-btn`);
+                    if (prevBtn) prevBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                }
+                
+                expandedContent.innerHTML = `
+                    <div class="endpoint-info">
+                        <span class="method-badge">${api.method}</span>
+                        <div class="url-box">
+                            <span id="url-${apiFile}">${window.location.origin}/api/${api.file.replace('.js', '')}</span>
+                            <button class="copy-btn" onclick="copyUrl('${apiFile}')">
+                                <i class="fas fa-copy"></i> Copy URL
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="params-section">
+                        <div style="font-weight: 600; margin-bottom: 1rem; color: var(--primary);">Parameters:</div>
+                        ${api.parameters.map(param => `
+                            <div class="param-group">
+                                <label class="param-label">${param}</label>
+                                <input type="text" class="param-input" id="param-${apiFile}-${param}" 
+                                       placeholder="Enter ${param}" 
+                                       ${param === 'url' ? 'value="https://"' : ''}>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="example-section">
+                        <div class="example-title">Example:</div>
+                        <div class="example-code">
+                            ${window.location.origin}/api/${api.file.replace('.js', '')}?${api.parameters[0]}=value
+                        </div>
+                    </div>
+                    
+                    <button class="execute-btn" onclick="executeApi('${apiFile}')" id="execute-${apiFile}">
+                        <i class="fas fa-play"></i> Execute API
+                    </button>
+                    
+                    <div class="result-container" id="result-${apiFile}">
+                        <div class="result-header">
+                            <span>API Response</span>
+                            <button class="copy-btn" onclick="copyResult('${apiFile}')" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div class="result-content">
+                            <div id="result-content-${apiFile}">Execute the API to see results...</div>
+                        </div>
+                    </div>
+                `;
+                
+                expandedContent.classList.add('active');
+                expandedApi = apiFile;
+                toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
+                
+                expandedContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function copyUrl(apiFile) {
+            const url = document.getElementById(`url-${apiFile}`).textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification('URL copied to clipboard!', 'success');
+            }).catch(err => {
+                showNotification('Failed to copy URL', 'error');
+                console.error('Copy failed:', err);
+            });
+        }
+
+        async function executeApi(apiFile) {
+            const executeBtn = document.getElementById(`execute-${apiFile}`);
+            const resultDiv = document.getElementById(`result-content-${apiFile}`);
+            const resultContainer = document.getElementById(`result-${apiFile}`);
+            
+            const category = apiData.categories.find(c => c.apis.some(a => a.file === apiFile));
+            const api = category.apis.find(a => a.file === apiFile);
+            
+            const originalBtnText = executeBtn.innerHTML;
+            executeBtn.innerHTML = '<span class="spinner"></span> Executing...';
+            executeBtn.disabled = true;
+            
+            resultDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 0.5rem;"><span class="spinner"></span> Sending request...</div>';
+            
+            try {
+                const params = {};
+                let hasParams = false;
+                
+                api.parameters.forEach(param => {
+                    const value = document.getElementById(`param-${apiFile}-${param}`).value.trim();
+                    if (value) {
+                        params[param] = value;
+                        hasParams = true;
+                    }
+                });
+                
+                const baseUrl = window.location.origin;
+                const apiPath = api.file.replace('.js', '');
+                const queryString = new URLSearchParams(params).toString();
+                const url = `${baseUrl}/api/${apiPath}${hasParams ? '?' + queryString : ''}`;
+                
+                const startTime = Date.now();
+                const response = await fetch(url);
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                const formattedResponse = JSON.stringify(data, null, 2);
+                resultDiv.innerHTML = `
+                    <div style="color: var(--success); font-weight: 600; margin-bottom: 1rem;">
+                        <i class="fas fa-check-circle"></i> Request successful (${responseTime}ms)
+                    </div>
+                    <pre class="json-view">${formattedResponse}</pre>
+                `;
+                
+                if (data.data && (data.data.video_url || data.data.audio_url || data.data.image_url)) {
+                    let mediaHTML = '';
+                    if (data.data.video_url) {
+                        mediaHTML += `
+                            <div style="margin-top: 1.5rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);">Video:</div>
+                                <video controls style="width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid var(--border);">
+                                    <source src="${data.data.video_url}" type="video/mp4">
+                                </video>
+                            </div>
+                        `;
+                    }
+                    if (data.data.audio_url) {
+                        mediaHTML += `
+                            <div style="margin-top: 1.5rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);">Audio:</div>
+                                <audio controls style="width: 100%;">
+                                    <source src="${data.data.audio_url}" type="audio/mpeg">
+                                </audio>
+                            </div>
+                        `;
+                    }
+                    if (data.data.image_url) {
+                        mediaHTML += `
+                            <div style="margin-top: 1.5rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary);">Image:</div>
+                                <img src="${data.data.image_url}" style="max-width: 100%; max-height: 300px; border-radius: 8px; border: 1px solid var(--border);">
+                            </div>
+                        `;
+                    }
+                    resultDiv.innerHTML += mediaHTML;
+                }
+                
+                resultContainer.classList.add('active');
+                
+                await sendNotification('api_test', {
+                    endpoint: api.name,
+                    file: api.file,
+                    url: url,
+                    response_time: responseTime,
+                    status: response.status
+                });
+                
+            } catch (error) {
+                console.error('API execution error:', error);
+                resultDiv.innerHTML = `
+                    <div style="color: var(--danger); padding: 1rem; background: rgba(255, 51, 51, 0.1); border-radius: 8px; border: 1px solid var(--danger);">
+                        <i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+                resultContainer.classList.add('active');
+                
+                await sendNotification('api_error', {
+                    endpoint: api.name,
+                    file: api.file,
+                    error: error.message
+                });
+            } finally {
+                executeBtn.innerHTML = originalBtnText;
+                executeBtn.disabled = false;
+            }
+        }
+
+        function copyResult(apiFile) {
+            const resultDiv = document.getElementById(`result-content-${apiFile}`);
+            const text = resultDiv.querySelector('pre')?.textContent || resultDiv.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Result copied to clipboard!', 'success');
+            }).catch(err => {
+                showNotification('Failed to copy result', 'error');
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function showBugModal() {
+            document.getElementById('bugModal').classList.add('active');
+        }
+
+        function closeBugModal() {
+            document.getElementById('bugModal').classList.remove('active');
+            document.getElementById('bugName').value = '';
+            document.getElementById('bugMessage').value = '';
+        }
+
+        async function submitBugReport() {
+            const name = document.getElementById('bugName').value.trim() || 'Anonymous';
+            const message = document.getElementById('bugMessage').value.trim();
+            
+            if (!message) {
+                showNotification('Please describe the bug first.', 'warning');
+                return;
+            }
+            
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                const success = await sendNotification('bug_report', {
+                    name: name,
+                    message: message,
+                    page: window.location.href,
+                    userAgent: navigator.userAgent
+                });
+                
+                if (success) {
+                    showNotification('Bug report submitted successfully!', 'success');
+                    closeBugModal();
+                } else {
+                    throw new Error('Failed to send notification');
+                }
+            } catch (error) {
+                console.error('Bug report error:', error);
+                showNotification('Failed to submit bug report. Please try again.', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function sendNotification(type, data) {
+            try {
+                const response = await fetch('/api/notif', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: type,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                return response.ok;
+            } catch (error) {
+                console.log('Notification service not available (normal if not configured)');
+                return false;
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? 'var(--success)' : 
+                                          type === 'error' ? 'var(--danger)' : 
+                                          type === 'warning' ? 'var(--warning)' : 'var(--primary)';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+
+        function showDocumentation() {
+            showNotification('Documentation will be available soon!', 'info');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAPIData);
+    </script>
+</body>
+</html>
