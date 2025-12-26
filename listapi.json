@@ -49,7 +49,9 @@
           "parameters": ["text", "size"],
           "active": true,
           "description": "Generate QR codes from text"
-      ]
+        }
+          ]
+      
     }
   ]
 }
