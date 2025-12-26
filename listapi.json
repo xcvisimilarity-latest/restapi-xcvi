@@ -1,7 +1,9 @@
 {
   "stats": {
     "active_endpoints": 1,
-    "total_endpoints": 1
+    "total_endpoints": 1,
+    "last_update": "2026-01-01",
+    "server_status": "online"
   },
   "categories": [
     {
