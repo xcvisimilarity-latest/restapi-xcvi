@@ -25,7 +25,7 @@
           "method": "GET",
           "parameters": ["url"],
           "active": true,
-          "description": "Download Instagram posts, reels, and stories"
+          "description": "Download Instagram posts and reels"
         },
         {
           "name": "YouTube Downloader",
@@ -46,57 +46,9 @@
           "name": "QR Code Generator",
           "file": "qrcode.js",
           "method": "GET",
-          "parameters": ["text", "size", "color"],
+          "parameters": ["text", "size"],
           "active": true,
-          "description": "Generate customizable QR codes"
-        },
-        {
-          "name": "Text to Speech",
-          "file": "tts.js",
-          "method": "GET",
-          "parameters": ["text", "language", "speed"],
-          "active": true,
-          "description": "Convert text to speech with multiple languages"
-        },
-        {
-          "name": "Image Optimizer",
-          "file": "optimize.js",
-          "method": "POST",
-          "parameters": ["image", "quality", "width"],
-          "active": true,
-          "description": "Optimize and compress images"
-        }
-      ]
-    },
-    {
-      "id": "utilities",
-      "name": "Utilities",
-      "icon": "fa-cogs",
-      "apis": [
-        {
-          "name": "URL Shortener",
-          "file": "shorten.js",
-          "method": "POST",
-          "parameters": ["url", "custom"],
-          "active": true,
-          "description": "Shorten long URLs with custom aliases"
-        },
-        {
-          "name": "IP Lookup",
-          "file": "iplookup.js",
-          "method": "GET",
-          "parameters": ["ip"],
-          "active": true,
-          "description": "Get detailed information about IP addresses"
-        },
-        {
-          "name": "Currency Converter",
-          "file": "currency.js",
-          "method": "GET",
-          "parameters": ["from", "to", "amount"],
-          "active": true,
-          "description": "Convert between currencies with real-time rates"
-        }
+          "description": "Generate QR codes from text"
       ]
     }
   ]
