@@ -1,8 +1,8 @@
 {
   "stats": {
-    "active_endpoints": 8,
-    "total_endpoints": 10,
-    "last_update": "2026-01-01",
+    "active_endpoints": 6,
+    "total_endpoints": 6,
+    "last_update": "2024-01-15",
     "server_status": "online"
   },
   "categories": [
@@ -13,7 +13,7 @@
       "apis": [
         {
           "name": "TikTok Downloader",
-          "file": "ttdl",
+          "file": "ttdl.js",
           "method": "GET",
           "parameters": ["url"],
           "active": true,
@@ -21,7 +21,7 @@
         },
         {
           "name": "Instagram Downloader",
-          "file": "igdl",
+          "file": "igdl.js",
           "method": "GET",
           "parameters": ["url"],
           "active": true,
@@ -29,7 +29,7 @@
         },
         {
           "name": "YouTube Downloader",
-          "file": "ytdl",
+          "file": "ytdl.js",
           "method": "GET",
           "parameters": ["url", "quality"],
           "active": true,
@@ -44,7 +44,7 @@
       "apis": [
         {
           "name": "QR Code Generator",
-          "file": "qrcode",
+          "file": "qrcode.js",
           "method": "GET",
           "parameters": ["text", "size"],
           "active": true,
@@ -52,7 +52,7 @@
         },
         {
           "name": "Text to Speech",
-          "file": "tts",
+          "file": "tts.js",
           "method": "GET",
           "parameters": ["text", "language"],
           "active": true,
@@ -60,7 +60,7 @@
         },
         {
           "name": "Image Optimizer",
-          "file": "optimize",
+          "file": "optimize.js",
           "method": "POST",
           "parameters": ["image", "quality"],
           "active": true,
