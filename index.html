@@ -822,12 +822,7 @@
                         `).join('')}
                     </div>
                     
-                    <div class="example-section">
-                        <div class="example-title">Example:</div>
-                        <div class="example-code">
-                            ${window.location.origin}/api/${api.file.replace('.js', '')}?${api.parameters[0]}=value
-                        </div>
-                    </div>
+                    
                     
                     <button class="execute-btn" onclick="executeApi('${apiFile}')" id="execute-${apiFile}">
                         <i class="fas fa-play"></i> Execute API
