@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API XCVI - Koleksi REST API Publik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0066ff;
+            --dark-blue: #0052cc;
+            --light-blue: #e6f2ff;
+            --black: #000000;
+            --dark-gray: #1a1a1a;
+            --gray: #333333;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --success: #00cc66;
+            --warning: #ff9900;
+            --danger: #ff3333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--black) 0%, var(--gray) 100%);
+            padding: 20px 0;
+            border-bottom: 3px solid var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--primary-blue), #00ccff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 102, 255, 0.3);
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            color: var(--primary-blue);
+        }
+
+        /* Header Image */
+        .header-image {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .header-image:hover img {
+            transform: scale(1.03);
+        }
+
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--dark-gray);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--light-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .channel-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .channel-link:hover {
+            background: var(--dark-blue);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.4);
+        }
+
+        /* API Categories */
+        .category {
+            background: var(--dark-gray);
+            border-radius: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid var(--gray);
+            transition: all 0.3s;
+        }
+
+        .category:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.2);
+        }
+
+        .category-header {
+            padding: 20px;
+            background: rgba(0, 102, 255, 0.1);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+        }
+
+        .category-header.active {
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .category-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--white);
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            transition: transform 0.3s;
+        }
+
+        .category-content {
+            display: none;
+            padding: 0;
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        .api-list {
+            list-style: none;
+        }
+
+        .api-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .api-item:last-child {
+            border-bottom: none;
+        }
+
+        .api-item:hover {
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        .api-info {
+            flex: 1;
+        }
+
+        .api-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .api-endpoint {
+            color: var(--light-blue);
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .api-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        .status-active {
+            background: rgba(0, 204, 102, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(255, 51, 51, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* Documentation */
+        .doc-section {
+            background: var(--dark-gray);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            border: 1px solid var(--gray);
+        }
+
+        .doc-section h2 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .code-block {
+            background: var(--black);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .code-block code {
+            color: #00ccff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-gray);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 3px solid var(--primary-blue);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--light-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .header-image {
+                height: 200px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .api-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .api-status {
+                align-self: flex-start;
+                margin-left: 0;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 102, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-code logo-icon"></i>
+                <h1>API XCVI</h1>
+            </div>
+            <p>API publik untuk kebutuhan development.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Header Image -->
+        <div class="header-image">
+            <img src="https://files.catbox.moe/unam1e.jpg" alt="API XCVI Banner" id="headerBanner">
+        </div>
+
+        <!-- Stats Section -->
+        <section class="stats-container">
+            <div class="stat-card">
+                <h3><i class="fas fa-plug"></i> Endpoint Aktif</h3>
+                <div class="stat-value" id="activeEndpoints">Loading...</div>
+                <p>Total endpoint yang berfungsi</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3><i class="fas fa-sync-alt"></i> Terakhir Update</h3>
+                <div class="stat-value" id="lastUpdate">Loading...</div>
+                <p>Pembaruan terakhir sistem</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3><i class="fas fa-broadcast-tower"></i> Status Server</h3>
+                <div class="stat-value" style="color: var(--success);" id="serverStatus">Online</div>
+                <p>Semua sistem berjalan normal</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3><i class="fab fa-whatsapp"></i> Saluran Info</h3>
+                <p>Dapatkan update terbaru melalui WhatsApp Channel kami</p>
+                <a href="https://whatsapp.com/channel/0029VbCA8f77j6gFUcCZTu0y" target="_blank" class="channel-link">
+                    <i class="fab fa-whatsapp"></i> Join WhatsApp Channel
+                </a>
+            </div>
+        </section>
+
+        <!-- API Categories -->
+        <section id="apiCategories">
+        </section>
+
+        
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-home"></i> Home</a>
+                <a href="#"><i class="fas fa-code"></i> Documentation</a>
+                <a href="https://whatsapp.com/channel/0029VbCA8f77j6gFUcCZTu0y" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Channel</a>
+                <a href="#"><i class="fas fa-bug"></i> Report Bug</a>
+            </div>
+            <p class="copyright">© 2025 API XCVI</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load API data from listapi.json
+        async function loadAPIData() {
+            try {
+                const response = await fetch('listapi.json');
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('activeEndpoints').textContent = data.stats.active_endpoints;
+                document.getElementById('lastUpdate').textContent = data.stats.last_update;
+                
+                // Render categories
+                const container = document.getElementById('apiCategories');
+                container.innerHTML = '';
+                
+                data.categories.forEach(category => {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.className = 'category';
+                    categoryElement.innerHTML = `
+                        <div class="category-header" onclick="toggleCategory('${category.id}')">
+                            <h2><i class="fas ${category.icon}"></i> ${category.name}</h2>
+                            <i class="fas fa-chevron-down toggle-icon" id="icon-${category.id}"></i>
+                        </div>
+                        <div class="category-content" id="content-${category.id}">
+                            <ul class="api-list">
+                                ${category.apis.map(api => `
+                                    <li class="api-item">
+                                        <div class="api-info">
+                                            <div class="api-name">${api.name}</div>
+                                            <div class="api-endpoint">${window.location.origin}/api/${api.file}</div>
+                                        </div>
+                                        <span class="api-status ${api.active ? 'status-active' : 'status-inactive'}">
+                                            ${api.active ? '<i class="fas fa-check-circle"></i> Aktif' : '<i class="fas fa-times-circle"></i> Tidak Aktif'}
+                                        </span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    container.appendChild(categoryElement);
+                });
+                
+                // Open first category by default
+                if (data.categories.length > 0) {
+                    setTimeout(() => toggleCategory(data.categories[0].id), 100);
+                }
+                
+            } catch (error) {
+                console.error('Error loading API data:', error);
+                document.getElementById('apiCategories').innerHTML = 
+                    '<p style="text-align:center; color:var(--danger);">Gagal memuat data API. Coba refresh halaman.</p>';
+            }
+        }
+        
+        function toggleCategory(categoryId) {
+            const content = document.getElementById(`content-${categoryId}`);
+            const icon = document.getElementById(`icon-${categoryId}`);
+            
+            // Toggle current category
+            content.classList.toggle('active');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+            
+            // Close other categories
+            document.querySelectorAll('.category-content').forEach(item => {
+                if (item.id !== `content-${categoryId}`) {
+                    item.classList.remove('active');
+                    const otherIcon = document.getElementById(item.id.replace('content-', 'icon-'));
+                    if (otherIcon) {
+                        otherIcon.classList.remove('fa-chevron-up');
+                        otherIcon.classList.add('fa-chevron-down');
+                    }
+                }
+            });
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAPIData();
+            
+            // Simulate live updates
+            setInterval(() => {
+                const status = document.getElementById('serverStatus');
+                if (status.textContent === 'Online') {
+                    status.style.color = 'var(--success)';
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

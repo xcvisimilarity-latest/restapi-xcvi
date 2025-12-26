@@ -1,0 +1,100 @@
+{
+  "project": "API XCVI",
+  "version": "1.0.0",
+  "base_url": "https://api-xcvi.my.id",
+  "stats": {
+    "active_endpoints": 8,
+    "total_endpoints": 10,
+    "last_update": "2025-12-26",
+    "server_status": "online"
+  },
+  "categories": [
+    {
+      "id": "downloader",
+      "name": "Downloader",
+      "icon": "fa-download",
+      "description": "API untuk mendownload konten dari berbagai platform",
+      "apis": [
+        {
+          "name": "TikTok Downloader",
+          "file": "ttdl.js",
+          "endpoint": "/api/ttdl",
+          "method": "GET",
+          "parameters": ["url"],
+          "active": true,
+          "description": "Download video TikTok tanpa watermark"
+        },
+        {
+          "name": "Instagram Downloader",
+          "file": "igdl.js",
+          "endpoint": "/api/igdl",
+          "method": "GET",
+          "parameters": ["url"],
+          "active": true,
+          "description": "Download video dan foto dari Instagram"
+        },
+        {
+          "name": "YouTube Downloader",
+          "file": "ytdl.js",
+          "endpoint": "/api/ytdl",
+          "method": "GET",
+          "parameters": ["url", "quality"],
+          "active": false,
+          "description": "Download video YouTube (dalam pengembangan)"
+        }
+      ]
+    },
+    {
+      "id": "converter",
+      "name": "Converter",
+      "icon": "fa-exchange-alt",
+      "description": "API untuk konversi berbagai format",
+      "apis": [
+        {
+          "name": "Image to PDF",
+          "file": "img2pdf.js",
+          "endpoint": "/api/img2pdf",
+          "method": "POST",
+          "parameters": ["image"],
+          "active": true,
+          "description": "Konversi gambar ke format PDF"
+        },
+        {
+          "name": "Text to Speech",
+          "file": "tts.js",
+          "endpoint": "/api/tts",
+          "method": "GET",
+          "parameters": ["text", "language"],
+          "active": true,
+          "description": "Konversi teks ke suara"
+        }
+      ]
+    },
+    {
+      "id": "tools",
+      "name": "Tools",
+      "icon": "fa-tools",
+      "description": "Berbagai alat bantu development",
+      "apis": [
+        {
+          "name": "QR Code Generator",
+          "file": "qrcode.js",
+          "endpoint": "/api/qrcode",
+          "method": "GET",
+          "parameters": ["text", "size"],
+          "active": true,
+          "description": "Generate QR code dari teks"
+        },
+        {
+          "name": "Short URL",
+          "file": "shorturl.js",
+          "endpoint": "/api/shorturl",
+          "method": "POST",
+          "parameters": ["url"],
+          "active": true,
+          "description": "Pendekkan URL panjang"
+        }
+      ]
+    }
+  ]
+}
