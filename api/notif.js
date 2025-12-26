@@ -1,56 +1,57 @@
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8552858564:AAFCDkKDzCEf4tNZXJx7Js0DRI7QUK7PCps';
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '7950114253';
+const TELEGRAM_BOT_TOKEN = '8552858564:AAFCDkKDzCEf4tNZXJx7Js0DRI7QUK7PCps';
+const TELEGRAM_CHAT_ID = '7950114253';
 
-async function sendTelegramMessage(message) {
+async function sendTelegramMessage(text) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+    
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
     try {
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: TELEGRAM_CHAT_ID,
-                text: message,
+                text: text,
                 parse_mode: 'HTML'
             })
         });
-        
-        return await response.json();
     } catch (error) {
-        console.error('Error sending Telegram message:', error);
-        return null;
+        console.error('Telegram notification failed:', error);
     }
 }
 
-async function logRequest(req, endpointName) {
-    const timestamp = new Date().toLocaleString('id-ID');
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'] || 'Unknown';
-    const method = req.method;
+async function logRequest(req, endpoint) {
+    const ip = req.headers['x-forwarded-for'] || req.ip;
+    const time = new Date().toLocaleString('id-ID');
+    const agent = req.headers['user-agent'] || 'Unknown';
     
     const message = `
-🔄 <b>API Request Detected</b>
+🔔 <b>API Request</b>
 ━━━━━━━━━━━━━━━
-📊 <b>Endpoint:</b> ${endpointName}
-⏰ <b>Time:</b> ${timestamp}
-📡 <b>Method:</b> ${method}
+📊 <b>Endpoint:</b> ${endpoint}
+⏰ <b>Time:</b> ${time}
+📡 <b>Method:</b> ${req.method}
 🌐 <b>IP:</b> ${ip}
-🖥️ <b>User Agent:</b> ${userAgent.substring(0, 50)}...
+🖥️ <b>User Agent:</b> ${agent.substring(0, 80)}...
 ━━━━━━━━━━━━━━━
-📈 <i>API XCVI Monitoring System</i>
     `;
     
-    if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-        await sendTelegramMessage(message);
-    }
-    
-    // Log ke console untuk debugging
-    console.log(`[${timestamp}] ${method} ${endpointName} from ${ip}`);
+    await sendTelegramMessage(message);
 }
 
-module.exports = {
-    sendTelegramMessage,
-    logRequest
-};
+async function logBugReport(data) {
+    const message = `
+🐛 <b>Bug Report</b>
+━━━━━━━━━━━━━━━
+👤 <b>From:</b> ${data.name}
+⏰ <b>Time:</b> ${new Date(data.timestamp).toLocaleString('id-ID')}
+📝 <b>Message:</b>
+${data.message}
+━━━━━━━━━━━━━━━
+    `;
+    
+    await sendTelegramMessage(message);
+}
+
+module.exports = { logRequest, logBugReport, sendTelegramMessage };
